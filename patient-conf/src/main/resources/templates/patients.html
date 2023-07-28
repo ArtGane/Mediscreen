@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des patients</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-4">
+    <form th:action="@{/patients/patient}" method="get">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Nom du patient" name="family">
+            <input type="text" class="form-control" placeholder="Prénom du patient" name="given">
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="submit">Rechercher</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col">
+                <h2>Liste des patients</h2>
+            </div>
+            <div class="col-auto">
+                <a th:href="@{/patients/filterByGender?sex=F}">
+                    <button class="btn btn-info ml-2">Patientes Féminines</button>
+                </a>
+                <a th:href="@{/patients/filterByGender?sex=M}">
+                    <button class="btn btn-warning ml-2">Patients Masculins</button>
+                </a>
+                <a th:href="@{/patients/filter}">
+                    <button class="btn btn-primary">Plus de 30 ans</button>
+                </a>
+                <a th:href="@{/patients}">
+                    <button class="btn btn-secondary">Tous les patients</button>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="container mt-3" style="height: 300px; overflow-y: auto;">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Date de naissance</th>
+                <th>Genre</th>
+                <th>Adresse</th>
+                <th>Téléphone</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="patient : ${patients}">
+                <form th:action="@{/patients/patient}" method="post">
+                    <input type="hidden" name="id" th:value="${patient.id}" />
+                    <td>
+                        <button type="submit" style="border:none; background-color: transparent; cursor: pointer;">
+                            <span th:text="${patient.family}"></span>
+                        </button>
+                    </td>
+                </form>
+                <td th:text="${patient.given}"></td>
+                <td th:text="${#temporals.format(patient.dob, 'yyyy-MM-dd')}"></td>
+                <td th:text="${patient.sex}"></td>
+                <td>
+                    <span th:if="${#strings.isEmpty(patient.address)}">Address inconnue</span>
+                    <span th:if="${!#strings.isEmpty(patient.address)}" th:text="${patient.address}"></span>
+                </td>
+                <td>
+                    <span th:if="${#strings.isEmpty(patient.phone)}">Téléphone inconnu</span>
+                    <span th:if="${!#strings.isEmpty(patient.phone)}" th:text="${patient.phone}"></span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container mt-4">
+        <h2>Création d'un nouveau patient</h2>
+        <a th:href="@{/patient/add}">
+            <button class="btn btn-success">Nouveau patient</button>
+        </a>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!-- update_patient.html -->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container d-flex justify-content-center align-items-center vh-100">
+  <div class="card p-4">
+    <h2 class="text-center">Mise à jour du patient</h2>
+    <form th:action="@{/patient/add}" th:object="${patient}" method="post">
+      <div class="form-group">
+        <input type="hidden" th:field="*{id}"/>
+        <input type="hidden" th:field="*{dob}"/>
+
+        <label>Nom</label>
+        <input type="text" th:field="*{family}" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label>Prénom</label>
+        <input type="text" th:field="*{given}" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label>Genre</label>
+        <select th:field="*{sex}" class="form-control" required>
+          <option value="M">M</option>
+          <option value="F">F</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Adresse</label>
+        <input type="text" th:field="*{address}" class="form-control">
+      </div>
+      <div class="form-group">
+        <label>Numéro de téléphone</label>
+        <input type="text" th:field="*{phone}" class="form-control">
+      </div>
+      <button type="submit" class="btn btn-primary">Mettre à jour</button>
+    </form>
+  </div>
+</div>
+</body>
+</html>

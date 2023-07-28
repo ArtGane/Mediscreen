@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Patient</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+<div class="container mt-4">
+    <h2>Informations du patient</h2>
+
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Date de naissance</th>
+                <th>Âge</th>
+                <th>Genre</th>
+                <th>Courriel</th>
+                <th>Téléphone</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td th:text="${patient.family}"></td>
+                <td th:text="${patient.given}"></td>
+                <td th:text="${#temporals.format(patient.dob, 'yyyy-MM-dd')}"></td>
+                <td th:text="${patient.age}"></td>
+                <td th:text="${patient.sex}"></td>
+                <td>
+                    <span th:if="${#strings.isEmpty(patient.address)}">Adresse inconnue</span>
+                    <span th:if="${!#strings.isEmpty(patient.address)}" th:text="${patient.address}"></span>
+                </td>
+                <td>
+                    <span th:if="${#strings.isEmpty(patient.phone)}">Téléphone inconnu</span>
+                    <span th:if="${!#strings.isEmpty(patient.phone)}" th:text="${patient.phone}"></span>
+                </td>
+                <td>
+                    <a th:href="@{'/patients/delete/' + ${patient.id}}">
+                <span class="btn btn-danger btn-sm">
+                    <i class="fas fa-trash"></i>
+                </span>
+                    </a>
+                    <a th:href="@{'/patients/edit/' + ${patient.id}}">
+                <span class="btn btn-primary btn-sm">
+                    <i class="fas fa-edit"></i>
+                </span>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:if="${errorMessage}">
+        <p th:text="${errorMessage}" class="text-danger"></p>
+    </div>
+
+    <a class="btn btn-primary" th:href="@{/patients}">Retour à la liste</a>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
