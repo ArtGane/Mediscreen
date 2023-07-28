@@ -2,8 +2,7 @@ package com.mediscreen.patient.model;
 
 import jakarta.persistence.*;
 
-import java.time.Instant;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "patients")
@@ -12,63 +11,78 @@ public class Patient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(nullable = false)
+    private String family;
+    @Column(nullable = false)
+    private String given;
+    @Column(nullable = false)
+    private LocalDate dob;
     @Column
-    private String lastname;
-
-    @Column
-    private String firstname;
-
-    @Column
-    private Date birthday;
-
     private int age;
-
-    private String gender;
-
-    private String address;
-
+    @Column(nullable = false)
+    private String sex;
     @Column
-    private String phoneNumber;
+    private String address = "";
+    @Column
+    private String phone = "";
 
+    public Patient() { }
 
-    public Patient(String lastname, String firstname, Date birthday, String gender) {
-        this.lastname = lastname;
-        this.firstname = firstname;
-        this.birthday = birthday;
-        this.gender = gender;
+    public Patient(String family, String given, LocalDate dob, String sex) {
+        this.family = family;
+        this.given = given;
+        this.dob = dob;
+        this.sex = sex;
+        this.age = getAge();
     }
 
-    public String getLastname() {
-        return lastname;
+    public Patient(Long id, String family, String given, LocalDate dob, String sex) {
+        this.id = id;
+        this.family = family;
+        this.given = given;
+        this.dob = dob;
+        this.age = getAge();
+        this.sex = sex;
     }
 
-    public void setLastName(String lastname) {
-        this.lastname = lastname;
+    public Long getId() {
+        return id;
     }
 
-    public String getFirstname() {
-        return firstname;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public String getFamily() {
+        return family;
     }
 
-    public Date getBirthday() {
-        return birthday;
+    public void setFamily(String family) {
+        this.family = family;
     }
 
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
+    public String getGiven() {
+        return given;
     }
 
-    public String getGender() {
-        return gender;
+    public void setGiven(String given) {
+        this.given = given;
     }
 
-    public void setGender(String gender) {
-        this.gender = gender;
+    public LocalDate getDob() {
+        return dob;
+    }
+
+    public void setDob(LocalDate dob) {
+        this.dob = dob;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
     }
 
     public String getAddress() {
@@ -79,15 +93,15 @@ public class Patient {
         this.address = address;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public int getAge() {
-        return Date.from(Instant.now()).compareTo(birthday);
+        return LocalDate.now().compareTo(dob);
     }
 }
