@@ -4,95 +4,73 @@ import com.mediscreen.patient.exception.UnknowPatient;
 import com.mediscreen.patient.model.Patient;
 import com.mediscreen.patient.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
-import java.awt.*;
 import java.util.List;
 
-@RequestMapping()
-@Controller
+@RestController
+@RequestMapping("/patients")
 public class PatientController {
 
     @Autowired
-    PatientService patientService;
+    private PatientService patientService;
 
-    @GetMapping("/patients")
-    public String getAllPatients(Model model) {
-        List<Patient> patients = patientService.getAllPatients();
-        model.addAttribute("patients", patients);
-        return "patients";
+    @GetMapping
+    public List<Patient> getAllPatients() {
+        return patientService.getAllPatients();
     }
 
-    @GetMapping("/patients/delete/{id}")
-    public String deletePatient(@PathVariable Long id) {
+    @GetMapping("/delete/{id}")
+    public ResponseEntity<Void> deletePatient(@PathVariable Long id) {
         patientService.deletePatient(id);
-        return "redirect:/patients";
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("/patient/add")
-    public String showCreateForm(Model model) {
-        Patient newPatient = new Patient();
-        model.addAttribute("patient", newPatient);
-        return "createPatient";
+    @GetMapping("/show")
+    public Patient showCreateForm() {
+        return new Patient();
     }
 
-    @GetMapping("/patients/edit/{id}")
-    public String showUpdateForm(@PathVariable Long id, Model model) {
-        Patient patient = patientService.getPatientById(id);
-        model.addAttribute("patient", patient);
-        return "updatePatient";
+    @GetMapping("/edit/{id}")
+    public Patient showUpdateForm(@PathVariable Long id) {
+        return patientService.getPatientById(id);
     }
 
-    @PostMapping("/patient/add")
-    @RequestMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public String savePatientUri(@ModelAttribute("patient") Patient newPatient) {
+    @PostMapping("/save")
+    public ResponseEntity<Void> savePatient(@ModelAttribute("patient") Patient newPatient) {
         patientService.createPatient(newPatient);
-        return "redirect:/patients";
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PostMapping("/patient/save")
-    public String savePatient(@ModelAttribute("patient") Patient newPatient) {
-        patientService.createPatient(newPatient);
-        return "redirect:/patients";
+    @GetMapping("/patient")
+    public Patient getPatientByLastnameAndFirstname(@RequestParam String lastname, @RequestParam String firstname) throws UnknowPatient {
+        return patientService.getPatientByCompleteName(lastname, firstname);
     }
 
-    @GetMapping("/patients/patient")
-    public String getPatientByLastnameAndFirstname(@RequestParam String lastname, @RequestParam String firstname, Model model) throws UnknowPatient {
-        Patient patient = patientService.getPatientByCompleteName(lastname, firstname);
-        model.addAttribute("patient", patient);
-        return "patient";
+    @PostMapping("/patient")
+    public Patient redirectToPatient(@RequestParam("id") Long id) {
+        return patientService.getPatientById(id);
     }
 
-    @PostMapping("/patients/patient")
-    public String redirectToPatient(@RequestParam("id") Long id, Model model) {
-        Patient patient = patientService.getPatientById(id);
-        model.addAttribute("patient", patient);
-        return "patient";
+    @GetMapping("/{id}")
+    public Patient getPatientById(@RequestParam Long id) {
+        return patientService.getPatientById(id);
     }
 
-    @GetMapping("/patients/{id}")
-    public String getPatientById(@RequestParam Long id, Model model) {
-        Patient patient = patientService.getPatientById(id);
-        model.addAttribute("patient", patient);
-        return "patient";
-
+    @GetMapping("/filter")
+    public List<Patient> getPatientsOver30() {
+        return patientService.getPatientsByAgeOverAgeRequired(30);
     }
 
-    @GetMapping("/patients/filter")
-    public String getPatientsOver30(Model model) {
-        List<Patient> filteredPatients = patientService.getPatientsByAgeOverAgeRequired(30);
-        model.addAttribute("patients", filteredPatients);
-        return "patients";
+    @GetMapping("/filterByGender")
+    public List<Patient> getPatientsByGender(@RequestParam String sex) {
+        return patientService.getOneGenderListOfPatients(sex);
     }
-
-    @GetMapping("/patients/filterByGender")
-    public String getPatientsByGender(@RequestParam String sex, Model model) {
-        List<Patient> patients = patientService.getOneGenderListOfPatients(sex);
-        model.addAttribute("patients", patients);
-        return "patients";
-    }
-
 }
+
