@@ -28,6 +28,16 @@ public class Patient {
 
     public Patient() { }
 
+    public Patient(String family, String given, LocalDate dob, String sex, String address, String phone) {
+        this.family = family;
+        this.given = given;
+        this.dob = dob;
+        this.sex = sex;
+        this.address = address;
+        this.phone = phone;
+        this.age = getAge();
+    }
+
     public Patient(String family, String given, LocalDate dob, String sex) {
         this.family = family;
         this.given = given;
