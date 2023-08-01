@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PatientService {
@@ -71,12 +72,12 @@ public class PatientService {
      * @return Un objet Patient représentant les informations du patient correspondant à l'identifiant unique donné.
      */
     public Patient getPatientById(Long id) {
-        Patient patient = patientRepository.getReferenceById(id);
+        Optional<Patient> patient = patientRepository.findById(id);
 
-        if (patient == null) {
+        if (!patient.isPresent()) {
             logger.error("Ce patient ou son ID n'existe pas en base de données");
         }
-        return patient;
+        return patient.get();
     }
 
     /**
