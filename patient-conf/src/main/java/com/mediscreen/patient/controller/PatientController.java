@@ -15,7 +15,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import java.util.List;
 
 @RestController
-@RequestMapping("/patients")
+@RequestMapping("/patient")
 public class PatientController {
 
     @Autowired
@@ -32,9 +32,11 @@ public class PatientController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("/show")
-    public Patient showCreateForm() {
-        return new Patient();
+    @PostMapping("/add")
+    @RequestMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public RedirectView savePatientUri(@ModelAttribute Patient newPatient) {
+        patientService.createPatient(newPatient);
+        return new RedirectView("/patients");
     }
 
     @GetMapping("/edit/{id}")
@@ -48,7 +50,7 @@ public class PatientController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/patient")
+    @GetMapping("/")
     public Patient getPatientByLastnameAndFirstname(@RequestParam String lastname, @RequestParam String firstname) throws UnknowPatient {
         return patientService.getPatientByCompleteName(lastname, firstname);
     }
@@ -59,7 +61,7 @@ public class PatientController {
     }
 
     @GetMapping("/{id}")
-    public Patient getPatientById(@RequestParam Long id) {
+    public Patient getPatientById(@PathVariable Long id) {
         return patientService.getPatientById(id);
     }
 

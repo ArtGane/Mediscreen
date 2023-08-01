@@ -4,6 +4,7 @@ import com.mediscreen.patient.exception.UnknowPatient;
 import com.mediscreen.patient.model.Patient;
 import com.mediscreen.patient.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,6 +35,10 @@ public class PatientController {
 
     @GetMapping("/patient/show")
     public String showCreateForm(Model model) {
+
+        // appel du back pour récupérer les infos du patient => JSON
+        // Creation de l'objet Patient à partir du JSON
+
         Patient newPatient = new Patient();
         model.addAttribute("patient", newPatient);
         return "createPatient";
