@@ -19,17 +19,4 @@ public class PatientAPI {
 		SpringApplication.run(PatientAPI.class, args);
 	}
 
-	@Bean
-	public RestTemplate restTemplate(RestTemplateBuilder builder) {
-		return builder.build();
-	}
-
-	@Bean
-	public CommandLineRunner run(RestTemplate restTemplate) throws Exception {
-		return args -> {
-			Patient patient = restTemplate.getForObject(
-					"http://localhost:8081/patient/add", Patient.class);
-			log.error(patient.toString());
-		};
-	}
 }
