@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -39,7 +40,7 @@ public class NoteService {
     }
 
     public Note getNoteById(Long id) {
-        Note note = noteRepository.getReferenceById(id);
+        Note note = noteRepository.findNoteById(id);
         if (note == null) {
             logger.error("Aucune note trouvée avec l'ID : {}", id);
             throw new IllegalArgumentException("Aucune note trouvée avec l'ID : " + id);
@@ -47,11 +48,25 @@ public class NoteService {
         return note;
     }
 
-    public List<Note> getAllPatientNotes(Long id) {
-        List<Note> patientNotes = noteRepository.findAllNotesOfPatientId(id);
+    public List<Note> getAllNotes(Long id) {
+        List<Note> patientNotes = noteRepository.findAllByPatId(id);
         if (patientNotes.isEmpty()) {
             logger.warn("Aucune note trouvée pour le patient avec l'ID : {}", id);
         }
         return patientNotes;
+    }
+
+    public List<Note> getNotesFromKey(String keyword) {
+        List<Note> notes = noteRepository.findAll();
+        List<Note> newNotes = new ArrayList<>();
+
+        for (Note note : notes) {
+            String[] notesByWords = note.getE().split("%s");
+            for (String word : notesByWords) {
+                if (word.equalsIgnoreCase(keyword)) newNotes.add(note);
+            }
+        }
+
+        return newNotes;
     }
 }

@@ -26,7 +26,7 @@ public class NoteController {
 
     @GetMapping("/{id}/all")
     public List<Note> getAllPatientNotes(@PathVariable Long id) {
-        return noteService.getAllPatientNotes(id);
+        return noteService.getAllNotes(id);
     }
 
     @GetMapping("/delete/{id}")
