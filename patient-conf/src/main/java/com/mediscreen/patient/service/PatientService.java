@@ -25,7 +25,7 @@ public class PatientService {
      *
      * @param patient Objet de type Patient représentant les informations du patient à créer.
      */
-    public void createPatient(Patient patient) {
+    public void createOrUpdatePatient(Patient patient) {
         if (patient != null) {
             patientRepository.save(patient);
             logger.info("Patient enregistré en base de données");

@@ -33,7 +33,7 @@ public class PatientController {
     @PostMapping("/add")
     @RequestMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public RedirectView savePatientUri(@ModelAttribute Patient newPatient) {
-        patientService.createPatient(newPatient);
+        patientService.createOrUpdatePatient(newPatient);
         return new RedirectView("/patients");
     }
 
@@ -44,7 +44,7 @@ public class PatientController {
 
     @PostMapping("/save")
     public ResponseEntity<Void> savePatient(@ModelAttribute("patient") Patient newPatient) {
-        patientService.createPatient(newPatient);
+        patientService.createOrUpdatePatient(newPatient);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
