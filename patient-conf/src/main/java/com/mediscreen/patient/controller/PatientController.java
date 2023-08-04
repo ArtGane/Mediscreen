@@ -30,8 +30,7 @@ public class PatientController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("/add")
-    @RequestMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @PostMapping(path = "/add", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public RedirectView savePatientUri(@ModelAttribute Patient newPatient) {
         patientService.createOrUpdatePatient(newPatient);
         return new RedirectView("/patients");
