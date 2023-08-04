@@ -1,9 +1,7 @@
 package org.mediscreen.front.controller;
 
-import com.mediscreen.patient.exception.UnknowPatient;
 import org.mediscreen.front.dto.PatientDto;
 import org.mediscreen.front.feign.PatientFeign;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,8 +14,11 @@ import java.util.List;
 @Controller
 public class PatientController {
 
-    @Autowired
-    PatientFeign patientFeign;
+    private final PatientFeign patientFeign;
+
+    public PatientController(PatientFeign patientFeign) {
+        this.patientFeign = patientFeign;
+    }
 
     @GetMapping("/all")
     public String getAllPatients(Model model) {
@@ -59,7 +60,7 @@ public class PatientController {
     }
 
     @GetMapping("/")
-    public String getPatientByLastnameAndFirstname(@RequestParam String lastname, @RequestParam String firstname, Model model) throws UnknowPatient {
+    public String getPatientByLastnameAndFirstname(@RequestParam String lastname, @RequestParam String firstname, Model model) {
         PatientDto patientDto = patientFeign.getPatientByLastnameAndFirstname(lastname, firstname);
         model.addAttribute("patient", patientDto);
         return "/patient/patient";
