@@ -1,6 +1,5 @@
 package org.mediscreen.front.feign;
 
-import com.mediscreen.patient.exception.UnknowPatient;
 import org.mediscreen.front.dto.PatientDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
@@ -12,7 +11,6 @@ import java.util.List;
 
 @FeignClient(name = "patient-conf", url = "localhost:8082/patient")
 public interface PatientFeign {
-
 
     @GetMapping("/patient")
     List<PatientDto> getAllPatients();
@@ -31,7 +29,7 @@ public interface PatientFeign {
     ResponseEntity<Void> savePatient(@ModelAttribute("patient") PatientDto newPatientDto);
 
     @GetMapping("/patient/")
-    PatientDto getPatientByLastnameAndFirstname(@RequestParam String lastname, @RequestParam String firstname) throws UnknowPatient;
+    PatientDto getPatientByLastnameAndFirstname(@RequestParam String lastname, @RequestParam String firstname);
 
     @PostMapping("/patient/patient")
     PatientDto redirectToPatient(@RequestParam("id") Long id);

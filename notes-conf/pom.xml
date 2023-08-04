@@ -11,7 +11,7 @@
     <groupId>com.mediscreen</groupId>
     <artifactId>notes-conf</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>DiabeteDetector</name>
+    <name>NotesAPI</name>
     <description>Demo project for Spring Boot</description>
     <properties>
         <java.version>17</java.version>
@@ -40,6 +40,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>3.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

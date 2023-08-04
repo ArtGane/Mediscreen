@@ -3,6 +3,7 @@ package com.mediscreen.notesconf.controller;
 import com.mediscreen.notesconf.model.Note;
 import com.mediscreen.notesconf.service.NoteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,7 +15,8 @@ public class NoteController {
     @Autowired
     NoteService noteService;
 
-    @PostMapping("/save")
+    @PostMapping("/add")
+    @RequestMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public Note createOrUpdateNote(@RequestBody Note note) {
         return noteService.createOrUpdateNote(note);
     }
