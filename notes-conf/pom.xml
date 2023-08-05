@@ -9,7 +9,7 @@
         <relativePath/>
     </parent>
     <groupId>com.mediscreen</groupId>
-    <artifactId>notes-conf</artifactId>
+    <artifactId>notes</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>NotesAPI</name>
     <description>Demo project for Spring Boot</description>

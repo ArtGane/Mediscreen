@@ -1,6 +1,6 @@
-package org.mediscreen.front.feign;
+package com.mediscreen.front.feign;
 
-import org.mediscreen.front.dto.PatientDto;
+import com.mediscreen.front.dto.PatientDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

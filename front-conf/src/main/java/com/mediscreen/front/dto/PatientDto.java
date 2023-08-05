@@ -1,4 +1,4 @@
-package org.mediscreen.front.dto;
+package com.mediscreen.front.dto;
 
 
 import org.springframework.cloud.openfeign.FeignClient;

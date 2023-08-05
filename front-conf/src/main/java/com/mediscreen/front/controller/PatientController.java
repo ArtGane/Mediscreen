@@ -1,7 +1,7 @@
-package org.mediscreen.front.controller;
+package com.mediscreen.front.controller;
 
-import org.mediscreen.front.dto.PatientDto;
-import org.mediscreen.front.feign.PatientFeign;
+import com.mediscreen.front.dto.PatientDto;
+import com.mediscreen.front.feign.PatientFeign;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
