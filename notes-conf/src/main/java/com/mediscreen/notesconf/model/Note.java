@@ -1,6 +1,7 @@
 package com.mediscreen.notesconf.model;
 
 import jakarta.persistence.*;
+import org.bson.types.ObjectId;
 
 import java.time.LocalDateTime;
 
@@ -8,36 +9,36 @@ import java.time.LocalDateTime;
 public class Note {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private ObjectId id;
     @Column
-    private Long patId;
-
+    private String patId;
     @Column
     private String e;
-
     @Column
     private LocalDateTime date;
 
-    public Note(Long patId, String e) {
+    public Note() {
+    }
+
+    public Note(String patId, String e) {
         this.patId = patId;
         this.e = e;
         this.date = getDate();
     }
 
-    public Note(Long id, Long patId, String e) {
+    public Note(ObjectId id, String patId, String e) {
         this.id = id;
         this.patId = patId;
         this.e = e;
         this.date = getDate();
     }
 
-    public Long getPatId() {
+    public String getPatId() {
         return patId;
     }
 
-    public void setPatId(Long patId) {
+    public void setPatId(String patId) {
         this.patId = patId;
     }
 

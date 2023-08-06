@@ -2,6 +2,7 @@ package com.mediscreen.notesconf.service;
 
 import com.mediscreen.notesconf.model.Note;
 import com.mediscreen.notesconf.repository.NoteRepository;
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class NoteService {
         return note;
     }
 
-    public void deleteNote(Long id) {
+    public void deleteNote(ObjectId id) {
         Note note = getNoteById(id);
         if (note != null) {
             noteRepository.delete(note);
@@ -39,7 +40,7 @@ public class NoteService {
         }
     }
 
-    public Note getNoteById(Long id) {
+    public Note getNoteById(ObjectId id) {
         Note note = noteRepository.findNoteById(id);
         if (note == null) {
             logger.error("Aucune note trouvée avec l'ID : {}", id);
@@ -49,7 +50,7 @@ public class NoteService {
     }
 
     public List<Note> getAllNotes(Long id) {
-        List<Note> patientNotes = noteRepository.findAllByPatId(id);
+        List<Note> patientNotes = noteRepository.findAllByPatId(id.toString());
         if (patientNotes.isEmpty()) {
             logger.warn("Aucune note trouvée pour le patient avec l'ID : {}", id);
         }
