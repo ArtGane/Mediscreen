@@ -25,7 +25,7 @@ public class NoteService {
             throw new IllegalArgumentException("La note ne peut pas être null.");
         }
         noteRepository.save(note);
-        logger.info("La note a été créée ou mise à jour : {}", note);
+        logger.info("La note du {} a été créée ou mise à jour", note.getDate());
         return note;
     }
 
