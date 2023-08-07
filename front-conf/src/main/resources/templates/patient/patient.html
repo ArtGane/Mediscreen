@@ -53,6 +53,20 @@
             </tr>
             </tbody>
         </table>
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>Comment</th>
+                <th>Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="note : ${notes}">
+                <td th:text="${note.e}"></td>
+                <td th:text="${note.date}"></td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 
     <div th:if="${errorMessage}">
