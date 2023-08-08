@@ -8,14 +8,15 @@
 <body>
 <div class="container mt-4">
     <h1>Création de Note</h1>
-    <form th:action="@{/save}" method="post">
+    <form th:action="@{/patHistory/save}" th:object="${note}" method="post">
         <div class="form-group">
-            <label for="patId">Patient</label>
-            <input type="text" class="form-control" id="patId" name="patId" required>
+            <label for="patientName">Nom du Patient</label>
+            <input type="text" class="form-control" id="patientName" th:value="${patientName}" readonly>
         </div>
+        <input type="hidden" name="patId" th:value="${patId}" />
         <div class="form-group">
-            <label for="e">Comment</label>
-            <input type="text" class="form-control" id="e" name="e" required>
+            <label for="e">Commentaire</label>
+            <textarea class="form-control" id="e" th:field="*{e}" rows="4" required></textarea>
         </div>
         <button type="submit" class="btn btn-primary">Enregistrer</button>
     </form>

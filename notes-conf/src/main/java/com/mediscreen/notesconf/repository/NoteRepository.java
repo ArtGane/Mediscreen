@@ -8,10 +8,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface NoteRepository extends MongoRepository<Note, Long> {
+public interface NoteRepository extends MongoRepository<Note, String> {
 
     List<Note> findAllByPatId(String id);
 
-    Note findNoteById(ObjectId id);
+    Note findNoteById(String id);
     Note findNoteByPatId(String id);
 }

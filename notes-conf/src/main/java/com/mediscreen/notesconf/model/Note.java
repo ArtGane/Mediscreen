@@ -1,21 +1,17 @@
 package com.mediscreen.notesconf.model;
 
 import jakarta.persistence.*;
-import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
-@Entity(name = "notes")
+@Document("notes")
 public class Note {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private ObjectId id;
-    @Column
+    private String id;
     private String patId;
-    @Column
     private String e;
-    @Column
     private LocalDateTime date;
 
     public Note() {
@@ -27,7 +23,7 @@ public class Note {
         this.date = getDate();
     }
 
-    public Note(ObjectId id, String patId, String e) {
+    public Note(String id, String patId, String e) {
         this.id = id;
         this.patId = patId;
         this.e = e;
@@ -51,10 +47,10 @@ public class Note {
     }
 
     public LocalDateTime getDate() {
-        return LocalDateTime.now();
+        return date;
     }
 
-    public void setDate(LocalDateTime date) {
-        this.date = date;
+    public void setDate() {
+        this.date = LocalDateTime.now();
     }
 }

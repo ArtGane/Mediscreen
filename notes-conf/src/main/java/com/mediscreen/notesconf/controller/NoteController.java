@@ -2,7 +2,7 @@ package com.mediscreen.notesconf.controller;
 
 import com.mediscreen.notesconf.model.Note;
 import com.mediscreen.notesconf.service.NoteService;
-import org.bson.types.ObjectId;
+import java.lang.String;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -21,18 +21,24 @@ public class NoteController {
         return noteService.createOrUpdateNote(note);
     }
 
-    @GetMapping("/{id}")
-    public Note getNoteById(@PathVariable ObjectId id) {
+    @PostMapping("/save")
+    public Note createOrUpdateNoteByPatient(@ModelAttribute Note note, @RequestParam("patId") Long patId) {
+        return noteService.createOrUpdateNoteByPatId(note, patId);
+    }
+
+    @GetMapping("/note")
+    public Note getNoteById(@RequestParam("id") String id) {
         return noteService.getNoteById(id);
     }
 
-    @GetMapping("/{id}/all")
-    public List<Note> getAllPatientNotes(@PathVariable Long id) {
-        return noteService.getAllNotes(id);
+    @GetMapping("/patient/all")
+    public List<Note> getAllPatientNotes(@RequestParam String patId) {
+        return noteService.getAllNotes(patId);
     }
 
-    @GetMapping("/delete/{id}")
-    public void deleteNote(@PathVariable ObjectId id) {
+    @GetMapping("/delete")
+    public void deleteNote(@RequestParam String id) {
         noteService.deleteNote(id);
     }
+
 }
