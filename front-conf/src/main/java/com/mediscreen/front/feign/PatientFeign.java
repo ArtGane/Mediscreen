@@ -9,17 +9,16 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
-@FeignClient(name = "patient-conf", url = "localhost:8083")
+@FeignClient(name = "patient-conf", url = "localhost:8081")
 public interface PatientFeign {
 
-    @GetMapping("/patient")
+    @GetMapping("/patient/all")
     List<PatientDto> getAllPatients();
 
     @GetMapping("/patient/delete/{id}")
     ResponseEntity<Void> deletePatient(@PathVariable Long id);
 
     @PostMapping("/patient/add")
-    @RequestMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     RedirectView savePatientUri(@ModelAttribute PatientDto newPatientDto);
 
     @GetMapping("/patient/edit/{id}")
@@ -28,10 +27,10 @@ public interface PatientFeign {
     @PostMapping("/patient/save")
     ResponseEntity<Void> savePatient(@ModelAttribute("patient") PatientDto newPatientDto);
 
-    @GetMapping("/patient/")
+    @GetMapping("/patient/search")
     PatientDto getPatientByLastnameAndFirstname(@RequestParam String lastname, @RequestParam String firstname);
 
-    @PostMapping("/patient/patient")
+    @PostMapping("/patient/redirect")
     PatientDto redirectToPatient(@RequestParam("id") Long id);
 
     @GetMapping("/patient/{id}")

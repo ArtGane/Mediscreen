@@ -1,6 +1,8 @@
 package com.mediscreen.front.controller;
 
+import com.mediscreen.front.dto.NoteDto;
 import com.mediscreen.front.dto.PatientDto;
+import com.mediscreen.front.feign.NoteFeign;
 import com.mediscreen.front.feign.PatientFeign;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -15,9 +17,11 @@ import java.util.List;
 public class PatientController {
 
     private final PatientFeign patientFeign;
+    private final NoteFeign noteFeign;
 
-    public PatientController(PatientFeign patientFeign) {
+    public PatientController(PatientFeign patientFeign, NoteFeign noteFeign) {
         this.patientFeign = patientFeign;
+        this.noteFeign = noteFeign;
     }
 
     @GetMapping("/all")
@@ -27,16 +31,16 @@ public class PatientController {
         return "/patient/patients";
     }
 
-    @GetMapping("/delete/{id}")
-    public String deletePatient(@PathVariable Long id) {
-        patientFeign.deletePatient(id);
-        return "redirect:/patient/patients";
-    }
-
     @GetMapping("/show")
     public String showCreateForm(Model model, PatientDto patientDto) {
         model.addAttribute("patient", patientDto);
         return "/patient/createPatient";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deletePatient(@PathVariable Long id) {
+        patientFeign.deletePatient(id);
+        return "redirect:/patient/patients";
     }
 
     @GetMapping("/edit/{id}")
@@ -47,7 +51,6 @@ public class PatientController {
     }
 
     @PostMapping("/add")
-    @RequestMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public RedirectView savePatientUri(@ModelAttribute PatientDto patientDto) {
         patientFeign.savePatientUri(patientDto);
         return new RedirectView("/patient/patients");
@@ -59,24 +62,31 @@ public class PatientController {
         return "redirect:/patient/patients";
     }
 
-    @GetMapping("/")
+    @GetMapping("/search")
     public String getPatientByLastnameAndFirstname(@RequestParam String lastname, @RequestParam String firstname, Model model) {
         PatientDto patientDto = patientFeign.getPatientByLastnameAndFirstname(lastname, firstname);
+        List<NoteDto> noteDtos = noteFeign.getAllPatientNotes(patientDto.getId().toString());
         model.addAttribute("patient", patientDto);
+        model.addAttribute("notes", noteDtos);
+
         return "/patient/patient";
     }
 
-    @PostMapping("/")
+    @PostMapping("/redirect")
     public String redirectToPatient(@RequestParam("id") Long id, Model model) {
         PatientDto patientDto = patientFeign.getPatientById(id);
+        List<NoteDto> noteDtos = noteFeign.getAllPatientNotes(id.toString());
         model.addAttribute("patient", patientDto);
+        model.addAttribute("notes", noteDtos);
         return "/patient/patient";
     }
 
     @GetMapping("/{id}")
-    public String getPatientById(@RequestParam Long id, Model model) {
+    public String getPatientById(@PathVariable("id") Long id, Model model) {
         PatientDto patientDto = patientFeign.getPatientById(id);
+        List<NoteDto> noteDtos = noteFeign.getAllPatientNotes(id.toString());
         model.addAttribute("patient", patientDto);
+        model.addAttribute("notes", noteDtos);
         return "/patient/patient";
 
     }

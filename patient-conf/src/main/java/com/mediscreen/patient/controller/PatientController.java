@@ -19,7 +19,7 @@ public class PatientController {
     @Autowired
     private PatientService patientService;
 
-    @GetMapping
+    @GetMapping("/all")
     public List<Patient> getAllPatients() {
         return patientService.getAllPatients();
     }
@@ -33,7 +33,7 @@ public class PatientController {
     @PostMapping(path = "/add", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public RedirectView savePatientUri(@ModelAttribute Patient newPatient) {
         patientService.createOrUpdatePatient(newPatient);
-        return new RedirectView("/patients");
+        return new RedirectView("/all");
     }
 
     @GetMapping("/edit/{id}")
@@ -47,12 +47,12 @@ public class PatientController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/")
+    @GetMapping("/search")
     public Patient getPatientByLastnameAndFirstname(@RequestParam String lastname, @RequestParam String firstname) throws UnknowPatient {
         return patientService.getPatientByCompleteName(lastname, firstname);
     }
 
-    @PostMapping("/patient")
+    @PostMapping("/redirect")
     public Patient redirectToPatient(@RequestParam("id") Long id) {
         return patientService.getPatientById(id);
     }

@@ -7,7 +7,7 @@
 </head>
 <body>
 <div class="container mt-4">
-    <form th:action="@{/patients/patient}" method="get">
+    <form th:action="@{/patient/search}" method="get">
         <div class="input-group mb-3">
             <input type="text" class="form-control" placeholder="Nom du patient" name="family">
             <input type="text" class="form-control" placeholder="Prénom du patient" name="given">
@@ -23,16 +23,16 @@
                 <h2>Liste des patients</h2>
             </div>
             <div class="col-auto">
-                <a th:href="@{/patients/filterByGender?sex=F}">
+                <a th:href="@{/patient/filterByGender?sex=F}">
                     <button class="btn btn-info ml-2">Patientes Féminines</button>
                 </a>
-                <a th:href="@{/patients/filterByGender?sex=M}">
+                <a th:href="@{/patient/filterByGender?sex=M}">
                     <button class="btn btn-warning ml-2">Patients Masculins</button>
                 </a>
-                <a th:href="@{/patients/filter}">
+                <a th:href="@{/patient/filter}">
                     <button class="btn btn-primary">Plus de 30 ans</button>
                 </a>
-                <a th:href="@{/patients}">
+                <a th:href="@{/patient/all}">
                     <button class="btn btn-secondary">Tous les patients</button>
                 </a>
             </div>
@@ -52,7 +52,7 @@
             </thead>
             <tbody>
             <tr th:each="patient : ${patients}">
-                <form th:action="@{/patients/patient}" method="post">
+                <form th:action="@{/patient/redirect}" method="post">
                     <input type="hidden" name="id" th:value="${patient.id}" />
                     <td>
                         <button type="submit" style="border:none; background-color: transparent; cursor: pointer;">

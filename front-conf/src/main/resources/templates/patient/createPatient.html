@@ -5,7 +5,7 @@
 <body>
 <div class="container mt-4">
     <h2>Création d'un nouveau patient</h2>
-    <form th:action="@{/patient/add}" th:object="${patient}" method="post">
+    <form th:action="@{/patient/save}" th:object="${patient}" method="post">
         <div class="form-group">
             <label>Nom</label>
             <input type="text" th:field="*{family}" class="form-control" required>
