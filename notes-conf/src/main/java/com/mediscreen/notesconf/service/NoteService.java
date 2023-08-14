@@ -77,7 +77,7 @@ public class NoteService {
         List<Note> newNotes = new ArrayList<>();
 
         for (Note note : notes) {
-            String[] notesByWords = note.getE().split("%s");
+            String[] notesByWords = note.getE().split(" ");
             for (String word : notesByWords) {
                 if (word.equalsIgnoreCase(keyword)) newNotes.add(note);
             }

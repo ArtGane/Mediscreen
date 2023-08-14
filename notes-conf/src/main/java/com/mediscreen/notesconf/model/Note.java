@@ -30,6 +30,14 @@ public class Note {
         this.date = getDate();
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getPatId() {
         return patId;
     }

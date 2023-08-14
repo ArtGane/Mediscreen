@@ -41,4 +41,10 @@ public class NoteController {
         noteService.deleteNote(id);
     }
 
+
+    @GetMapping("/edit")
+    public Note showUpdateForm(@RequestParam String id) {
+        Note note = noteService.getNoteById(id);
+        return noteService.createOrUpdateNote(note);
+    }
 }
