@@ -42,9 +42,8 @@ public class PatientController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Void> savePatient(@ModelAttribute("patient") Patient newPatient) {
-        patientService.createOrUpdatePatient(newPatient);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public Patient savePatient(@ModelAttribute("patient") Patient newPatient) {
+        return patientService.createOrUpdatePatient(newPatient);
     }
 
     @GetMapping("/search")

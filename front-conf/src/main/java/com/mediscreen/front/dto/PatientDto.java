@@ -1,7 +1,6 @@
 package com.mediscreen.front.dto;
 
 
-import org.springframework.cloud.openfeign.FeignClient;
 
 import java.time.LocalDate;
 

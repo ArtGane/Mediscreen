@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -28,22 +29,53 @@ class PatientServiceTest {
     PatientRepository patientRepository;
 
     private List<Patient> patients;
+    private Patient patientFemme;
+    private Patient patientHomme;
+
 
     @BeforeEach
     void init() {
         patients = new ArrayList<>();
-        Patient patientFemme = new Patient(1L, "Doe", "Jane", LocalDate.of(1989, 05, 8), "F");
-        Patient patientHomme = new Patient(2L, "Doe", "John", LocalDate.of(1994, 12, 28), "H");
+        patientFemme = new Patient(1L, "Doe", "Jane", LocalDate.of(1989, 05, 8), "F");
+        patientHomme = new Patient(2L, "Doe", "John", LocalDate.of(1994, 12, 28), "H");
 
         patients.add(patientFemme);
         patients.add(patientHomme);
 
-        when(patientRepository.findAll()).thenReturn(patients);
-        when(patientRepository.getReferenceById(1L)).thenReturn(patientFemme);
+    }
+
+    @Test
+    void testCreateOrUpdatePatient() {
+        when(patientRepository.save(any(Patient.class))).thenReturn(patientFemme);
+
+        Patient result = patientService.createOrUpdatePatient(patientFemme);
+
+        assertNotNull(result);
+        assertEquals(patientFemme.getId(), result.getId());
+        assertEquals(patientFemme.getFamily(), result.getFamily());
+        assertEquals(patientFemme.getGiven(), result.getGiven());
+        assertEquals(patientFemme.getDob(), result.getDob());
+        assertEquals(patientFemme.getSex(), result.getSex());
+
+        verify(patientRepository, times(1)).save(any(Patient.class));
+    }
+
+    @Test
+    void testDeletePatient() {
+        Long patientId = 2L;
+
+        when(patientRepository.getReferenceById(patientId)).thenReturn(patientHomme);
+
+        patientService.deletePatient(patientId);
+
+        verify(patientRepository, times(1)).getReferenceById(patientId);
+        verify(patientRepository, times(1)).delete(patientHomme);
     }
 
     @Test
     void TestGetAllPatients() {
+        when(patientRepository.findAll()).thenReturn(patients);
+
         List<Patient> result = patientService.getAllPatients();
         assertEquals(patients.size(), result.size());
         assertTrue(result.containsAll(patients));
@@ -51,15 +83,18 @@ class PatientServiceTest {
 
     @Test
     void TestGetPatientById() {
-        Long patientId = 1L;
-        Patient result = patientService.getPatientById(patientId);
-        assertTrue(result.getId().equals(patientId));
+        when(patientRepository.findById(1L)).thenReturn(Optional.ofNullable(patientFemme));
+
+        Patient result = patientService.getPatientById(1L);
+        assertTrue(result.getId().equals(1L));
     }
 
     @Test
     void TestGetPatientByCompleteName() throws UnknowPatient {
         String lastname = "Doe";
         String firstname = "Jane";
+        when(patientRepository.findPatientByFamily(lastname)).thenReturn(patients);
+
         Patient result = patientService.getPatientByCompleteName(lastname, firstname);
         assertNotNull(result);
         assertEquals(lastname, result.getFamily());
@@ -69,8 +104,10 @@ class PatientServiceTest {
     @Test
     void TestGetPatientsByLastname() throws UnknowPatient {
         String lastname = "Doe";
+        when(patientRepository.findPatientByFamily(lastname)).thenReturn(patients);
+
         List<Patient> result = patientService.getPatientsByLastname(lastname);
-        assertNotNull(result);
+        assertTrue(result.size() == 2);
         assertTrue(result.stream().allMatch(p -> p.getFamily().equals(lastname)));
     }
 

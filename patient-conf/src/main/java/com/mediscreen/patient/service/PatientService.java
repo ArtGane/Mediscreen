@@ -25,13 +25,15 @@ public class PatientService {
      *
      * @param patient Objet de type Patient représentant les informations du patient à créer.
      */
-    public void createOrUpdatePatient(Patient patient) {
+    public Patient createOrUpdatePatient(Patient patient) {
         if (patient != null) {
             patientRepository.save(patient);
             logger.info("Patient enregistré en base de données");
         } else {
             logger.error("Le patient n'a pas pu être enregistré en bdd parce qu'il est null");
         }
+
+        return patient;
     }
 
     /**
@@ -105,7 +107,7 @@ public class PatientService {
      * @param lastname Le nom de famille des patients recherchés.
      * @return Une liste (List) d'objets Patient contenant les patients correspondant au nom de famille donné.
      */
-    public List<Patient> getPatientsByLastname(String lastname) throws UnknowPatient {
+    public List<Patient> getPatientsByLastname(String lastname) {
         if (lastname.isEmpty()) {
             logger.error("Aucun patient avec ce nom de famille en base de données");
         }
