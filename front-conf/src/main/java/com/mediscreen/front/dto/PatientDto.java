@@ -15,6 +15,17 @@ public class PatientDto {
     private String phone;
     private int age;
 
+    public PatientDto() { }
+
+    public PatientDto(Long id, String family, String given, LocalDate dob, String sex) {
+        this.id = id;
+        this.family = family;
+        this.given = given;
+        this.dob = dob;
+        this.sex = sex;
+    }
+
+
     public Long getId() {
         return id;
     }

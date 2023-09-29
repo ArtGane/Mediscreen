@@ -9,7 +9,7 @@
 <div class="container d-flex justify-content-center align-items-center vh-100">
   <div class="card p-4">
     <h2 class="text-center">Mise à jour du patient</h2>
-    <form th:action="@{/patient/add}" th:object="${patient}" method="post">
+    <form th:action="@{/patient/save}" th:object="${patient}" method="post">
       <div class="form-group">
         <input type="hidden" th:field="*{id}"/>
         <input type="hidden" th:field="*{dob}"/>

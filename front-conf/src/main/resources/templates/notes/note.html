@@ -6,12 +6,13 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
+<a th:href="@{/patHistory/edit(id=${note.id})}">Modifier</a>
+<a th:href="@{/patHistory/delete(id=${note.id})}">Supprimer</a>
 <div class="note-detail">
     <h1>Détail de la Note</h1>
     <div class="note-content">
         <p th:text="${note.e}"></p>
     </div>
-    <a href="/patHistory/all">Retour à la liste des notes</a>
 </div>
 </body>
 </html>

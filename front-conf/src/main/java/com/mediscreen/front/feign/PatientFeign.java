@@ -9,7 +9,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
-@FeignClient(name = "patient-conf", url = "localhost:8081")
+@FeignClient(name = "patient", url = "localhost:8081")
 public interface PatientFeign {
 
     @GetMapping("/patient/all")

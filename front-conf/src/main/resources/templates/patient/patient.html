@@ -55,30 +55,33 @@
         </table>
         <div class="notes-list display-flex">
             <div class="note-item justify-content-center" th:each="note : ${notes}">
-                <input type="hidden" name="id" th:value="${note.id}" />
-                <a th:href="@{/patHistory/show(id=${note.id})}">Modifier</a>
-                <a th:href="@{/patHistory/delete(id=${note.id})}">Supprimer</a>
+                <input type="hidden" name="id" th:value="${note.id}"/>
                 <div class="note-date" th:classappend="${'bold'}">
                     <span th:utext="${#temporals.format(note.date, 'dd MMMM yyyy HH:mm')}"></span>
                 </div>
                 <div class="note-content">
                     <p th:inline="text">
                         [[${#strings.abbreviate(note.e, 100)}]]
-                        <a th:href="@{/patHistory/note(id=${note.id})}">Lire la suite</a>
+                    <form th:action="@{/patHistory/note}" method="get">
+                        <input type="hidden" name="id" th:value="${note.id}"/>
+                        <button type="submit" style="border:none; background-color: transparent; cursor: pointer;">
+                            Lire la suite
+                        </button>
+                    </form>
                     </p>
                 </div>
             </div>
             <a th:href="@{/patHistory/show(patId=${patient.id})}">Ajouter une note</a>
-        </div>
-        <div th:if="${errorMessage}">
-            <p th:text="${errorMessage}" class="text-danger"></p>
+
+            <div th:if="${errorMessage}">
+                <p th:text="${errorMessage}" class="text-danger"></p>
+            </div>
+
+            <a class="btn btn-primary" th:href="@{/patient/all}">Retour à la liste</a>
         </div>
 
-        <a class="btn btn-primary" th:href="@{/patient/all}">Retour à la liste</a>
-    </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

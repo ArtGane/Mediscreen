@@ -4,6 +4,7 @@ import com.mediscreen.front.dto.NoteDto;
 import com.mediscreen.front.dto.PatientDto;
 import com.mediscreen.front.feign.NoteFeign;
 import com.mediscreen.front.feign.PatientFeign;
+import org.aspectj.weaver.ast.Not;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -58,5 +59,14 @@ public class NoteController {
     public String deleteNote(@RequestParam("id") String id) {
         noteFeign.deleteNote(id);
         return "redirect:/patient/patient";
+    }
+
+    @GetMapping("/edit")
+    public String showUpdateForm(@RequestParam String id, Model model) {
+        NoteDto noteDto = noteFeign.getNoteById(id);
+        PatientDto patientDto = patientFeign.getPatientById(Long.parseLong(noteDto.getPatId()));
+        model.addAttribute("note", noteDto);
+        model.addAttribute("patientName", patientDto.getFamily());
+        return "/notes/createNote.html";
     }
 }
