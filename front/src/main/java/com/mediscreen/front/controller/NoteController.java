@@ -1,11 +1,11 @@
 package com.mediscreen.front.controller;
 
+import com.mediscreen.front.dto.AssessmentDto;
 import com.mediscreen.front.dto.NoteDto;
 import com.mediscreen.front.dto.PatientDto;
+import com.mediscreen.front.feign.AssessmentFeign;
 import com.mediscreen.front.feign.NoteFeign;
 import com.mediscreen.front.feign.PatientFeign;
-import org.aspectj.weaver.ast.Not;
-import org.bson.types.ObjectId;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,46 +19,51 @@ public class NoteController {
 
     private final NoteFeign noteFeign;
     private final PatientFeign patientFeign;
+    private final AssessmentFeign assessmentFeign;
 
-    public NoteController(NoteFeign noteFeign, PatientFeign patientFeign) {
+    public NoteController(NoteFeign noteFeign, PatientFeign patientFeign, AssessmentFeign assessmentFeign) {
         this.noteFeign = noteFeign;
         this.patientFeign = patientFeign;
+        this.assessmentFeign = assessmentFeign;
     }
 
     @PostMapping("/save")
     public String createOrUpdateNote(@ModelAttribute NoteDto noteDto, @RequestParam("patId") String patId, Model model) {
         noteFeign.createNoteByPatId(Map.of("patId", patId, "e", noteDto.getE()));
         PatientDto patientDto = patientFeign.getPatientById(Long.parseLong(patId));
-        return String.format("redirect:/patient/%s", patId);
+        AssessmentDto assessmentDto = assessmentFeign.getAssessmentByPatientId(Long.parseLong(patId));
+        return "redirect:/patient/all";
     }
 
     @GetMapping("/show")
     public String showCreateNoteForm(@RequestParam("patId") String patId, Model model) {
         PatientDto patientDto = patientFeign.getPatientById(Long.parseLong(patId));
         model.addAttribute("patientName", patientDto.getFamily());
-        model.addAttribute("patId", patId);
+        model.addAttribute("patId", patientDto.getId());
         model.addAttribute("note", new NoteDto());
-        return "/notes/createNote";
+        return "notes/createNote";
     }
 
     @GetMapping("/note")
     public String getNoteById(@RequestParam("id") String id, Model model) {
         NoteDto noteDto = noteFeign.getNoteById(id);
         model.addAttribute("note", noteDto);
-        return "/notes/note";
+        return "notes/note";
     }
 
-    @GetMapping("/patient/all")
+    @GetMapping("/patient")
     public String getAllPatientNotes(@RequestParam("patId") String patId, Model model) {
         List<NoteDto> notes = noteFeign.getAllPatientNotes(patId);
+        PatientDto patientDto = patientFeign.getPatientById(Long.valueOf(patId));
+        model.addAttribute("patient", patientDto);
         model.addAttribute("notes", notes);
-        return "/patient/patient";
+        return "patient/patient";
     }
 
     @GetMapping("/delete")
-    public String deleteNote(@RequestParam("id") String id) {
+    public String deleteNote(@RequestParam("id") String id, @RequestParam("patId") String patId) {
         noteFeign.deleteNote(id);
-        return "redirect:/patient/patient";
+        return "redirect:/patient/all";
     }
 
     @GetMapping("/edit")
@@ -67,6 +72,6 @@ public class NoteController {
         PatientDto patientDto = patientFeign.getPatientById(Long.parseLong(noteDto.getPatId()));
         model.addAttribute("note", noteDto);
         model.addAttribute("patientName", patientDto.getFamily());
-        return "/notes/createNote.html";
+        return "notes/createNote.html";
     }
 }

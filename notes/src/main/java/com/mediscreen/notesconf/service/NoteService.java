@@ -69,7 +69,7 @@ public class NoteService {
         Note note = getNoteById(id);
         if (note != null) {
             noteRepository.delete(note);
-            logger.info("La note a été supprimée : {}", note);
+            logger.info("La note {} a été supprimée", note.getDate());
         } else {
             logger.error("Aucune note trouvée avec l'ID : {}", id);
             throw new IllegalArgumentException("Aucune note trouvée avec l'ID : " + id);

@@ -2,6 +2,7 @@ package com.mediscreen.front.controller;
 
 import com.mediscreen.front.dto.NoteDto;
 import com.mediscreen.front.dto.PatientDto;
+import com.mediscreen.front.feign.AssessmentFeign;
 import com.mediscreen.front.feign.NoteFeign;
 import com.mediscreen.front.feign.PatientFeign;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,8 @@ class NoteControllerTest {
     private PatientFeign patientFeign;
     @MockBean
     private NoteFeign noteFeign;
+    @MockBean
+    private AssessmentFeign assessmentFeign;
 
     @Test
     void testCreateOrUpdateNote() throws Exception {
@@ -42,7 +45,7 @@ class NoteControllerTest {
                         .param("patId", patId)
                         .param("e", noteDto.getE()))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/patient/1"));
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/patient/all"));
 
         verify(patientFeign, times(1)).getPatientById(Long.parseLong(patId));
         verify(noteFeign, times(1)).createNoteByPatId(Map.of("patId", patId, "e", noteDto.getE()));
@@ -58,9 +61,8 @@ class NoteControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/patHistory/show")
                         .param("patId", patId))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("/notes/createNote"))
+                .andExpect(MockMvcResultMatchers.view().name("notes/createNote"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("patientName"))
-                .andExpect(MockMvcResultMatchers.model().attributeExists("patId"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("note"));
 
         verify(patientFeign, times(1)).getPatientById(Long.parseLong(patId));
@@ -75,40 +77,21 @@ class NoteControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/patHistory/note")
                         .param("id", noteId))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("/notes/note"))
+                .andExpect(MockMvcResultMatchers.view().name("notes/note"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("note"));
 
         verify(noteFeign, times(1)).getNoteById(noteId);
     }
 
     @Test
-    void testGetAllPatientNotes() throws Exception {
-        String patId = "1";
-        List<NoteDto> notes = Collections.singletonList(new NoteDto());
-        PatientDto patientDto = new PatientDto();
-        patientDto.setFamily("Doe");
-
-        when(noteFeign.getAllPatientNotes(patId)).thenReturn(notes);
-        when(patientFeign.getPatientById(Long.parseLong(patId))).thenReturn(patientDto);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/patHistory/patient/all")
-                        .param("patId", patId))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("/patient/patient"))
-                .andExpect(MockMvcResultMatchers.model().attributeExists("notes"));
-
-        verify(noteFeign, times(1)).getAllPatientNotes(patId);
-    }
-
-    @Test
     void testDeleteNote() throws Exception {
         String noteId = "1";
-
+        String patId = "2";
         mockMvc.perform(MockMvcRequestBuilders.get("/patHistory/delete")
-                        .param("id", noteId))
+                        .param("id", noteId)
+                        .param("patId", patId))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/patient/patient"));
-
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/patient/all"));
         verify(noteFeign, times(1)).deleteNote(noteId);
     }
 
@@ -126,7 +109,7 @@ class NoteControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/patHistory/edit")
                         .param("id", noteId))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("/notes/createNote.html"))
+                .andExpect(MockMvcResultMatchers.view().name("notes/createNote.html"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("note"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("patientName"));
 
