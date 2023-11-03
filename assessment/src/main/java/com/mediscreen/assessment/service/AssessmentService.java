@@ -60,10 +60,14 @@ public class AssessmentService {
         for (NoteDto note : notes) {
             String noteContent = note.getE();
 
+            if (noteContent == null) {
+                triggerCount = triggerCount;
+            }
+
             for (Trigger trigger : Arrays.asList(Trigger.HEMOGLOBIN, Trigger.MICROALBUMIN, Trigger.HEIGHT, Trigger.WEIGHT,
                     Trigger.SMOKER, Trigger.ABNORMAL, Trigger.CHOLESTEROL, Trigger.DIZZINESS, Trigger.RELAPSE, Trigger.REACTION,
                     Trigger.ANTIBODIES)) {
-                if (noteContent.contains(trigger.getTrigger())) {
+                if (noteContent != null && noteContent.contains(trigger.getTrigger())) {
                     triggerCount++;
                 }
             }
@@ -77,8 +81,8 @@ public class AssessmentService {
      * Calcule le niveau de risque en fonction des facteurs, de l'âge et du genre du patient.
      *
      * @param factors Le nombre de facteurs de risque.
-     * @param age L'âge du patient.
-     * @param gender Le genre du patient (F pour féminin, M pour masculin).
+     * @param age     L'âge du patient.
+     * @param gender  Le genre du patient (F pour féminin, M pour masculin).
      * @return Le niveau de risque calculé.
      */
     private Level getRiskByLevel(int factors, int age, String gender) {
