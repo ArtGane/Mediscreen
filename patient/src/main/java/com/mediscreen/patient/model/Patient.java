@@ -37,6 +37,14 @@ public class Patient {
         this.sex = sex;
     }
 
+    public Patient(String family, String given, LocalDate dob, String sex) {
+        this.family = family;
+        this.given = given;
+        this.dob = dob;
+        this.age = getAge();
+        this.sex = sex;
+    }
+
     public Long getId() {
         return id;
     }

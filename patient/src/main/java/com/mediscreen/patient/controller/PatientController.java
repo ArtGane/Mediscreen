@@ -3,6 +3,8 @@ package com.mediscreen.patient.controller;
 import com.mediscreen.patient.exception.UnknowPatient;
 import com.mediscreen.patient.model.Patient;
 import com.mediscreen.patient.service.PatientService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,6 +17,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/patient")
 public class PatientController {
+
+    private Logger logger = LoggerFactory.getLogger(PatientController.class);
 
     @Autowired
     private PatientService patientService;
@@ -41,8 +45,8 @@ public class PatientController {
         return patientService.getPatientById(id);
     }
 
-    @PostMapping("/save")
-    public Patient savePatient(@ModelAttribute("patient") Patient newPatient) {
+    @PostMapping(path = "/save", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Patient savePatient(@RequestBody Patient newPatient) {
         return patientService.createOrUpdatePatient(newPatient);
     }
 

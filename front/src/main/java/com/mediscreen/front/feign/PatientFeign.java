@@ -9,36 +9,33 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
-@FeignClient(name = "patient", url = "localhost:8081")
+@FeignClient(name = "patient", url = "${url.patient}")
 public interface PatientFeign {
 
-    @GetMapping("/patient/all")
+    @GetMapping("/all")
     List<PatientDto> getAllPatients();
 
-    @GetMapping("/patient/delete/{id}")
+    @GetMapping("/delete/{id}")
     ResponseEntity<Void> deletePatient(@PathVariable Long id);
 
-    @PostMapping("/patient/add")
+    @PostMapping("/add")
     RedirectView savePatientUri(@ModelAttribute PatientDto newPatientDto);
 
-    @GetMapping("/patient/edit/{id}")
+    @GetMapping("/edit/{id}")
     PatientDto showUpdateForm(@PathVariable Long id);
 
-    @PostMapping("/patient/save")
+    @PostMapping("/save")
     ResponseEntity<Void> savePatient(@ModelAttribute("patient") PatientDto newPatientDto);
 
-    @GetMapping("/patient/search")
-    PatientDto getPatientByLastnameAndFirstname(@RequestParam String lastname, @RequestParam String firstname);
-
-    @PostMapping("/patient/redirect")
+    @PostMapping("/redirect")
     PatientDto redirectToPatient(@RequestParam("id") Long id);
 
-    @GetMapping("/patient/{id}")
+    @GetMapping("/{id}")
     PatientDto getPatientById(@PathVariable Long id);
 
-    @GetMapping("/patient/filter")
+    @GetMapping("/filter")
     List<PatientDto> getPatientsOver30();
 
-    @GetMapping("/patient/filterByGender")
+    @GetMapping("/filterByGender")
     List<PatientDto> getPatientsByGender(@RequestParam String sex);
 }
