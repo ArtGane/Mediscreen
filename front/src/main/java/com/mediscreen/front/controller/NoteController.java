@@ -28,10 +28,10 @@ public class NoteController {
     }
 
     @PostMapping("/save")
-    public String createOrUpdateNote(@ModelAttribute NoteDto noteDto, @RequestParam("patId") String patId, Model model) {
-        noteFeign.createNoteByPatId(Map.of("patId", patId, "e", noteDto.getE()));
-        PatientDto patientDto = patientFeign.getPatientById(Long.parseLong(patId));
-        AssessmentDto assessmentDto = assessmentFeign.getAssessmentByPatientId(Long.parseLong(patId));
+    public String createOrUpdateNote(@ModelAttribute NoteDto noteDto, Model model) {
+        noteFeign.createNoteByPatId(noteDto);
+        PatientDto patientDto = patientFeign.getPatientById(Long.parseLong(noteDto.getPatId()));
+        AssessmentDto assessmentDto = assessmentFeign.getAssessmentByPatientId(Long.parseLong(noteDto.getPatId()));
         return "redirect:/patient/all";
     }
 
@@ -70,6 +70,8 @@ public class NoteController {
     public String showUpdateForm(@RequestParam String id, Model model) {
         NoteDto noteDto = noteFeign.getNoteById(id);
         PatientDto patientDto = patientFeign.getPatientById(Long.parseLong(noteDto.getPatId()));
+        model.addAttribute("id", noteDto.getId());
+        model.addAttribute("patId", patientDto.getId());
         model.addAttribute("note", noteDto);
         model.addAttribute("patientName", patientDto.getFamily());
         return "notes/createNote.html";

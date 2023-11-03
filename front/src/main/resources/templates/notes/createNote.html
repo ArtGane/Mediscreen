@@ -14,6 +14,12 @@
             <input type="text" class="form-control" id="patientName" th:value="${patientName}" readonly>
         </div>
         <input type="hidden" name="patId" th:value="${patId}" />
+
+        <div th:if="${note.id != null}">
+            <input type="hidden" name="id" th:value="${note.id}" />
+            <input type="hidden" name="date" th:value="${note.date}" />
+        </div>
+
         <div class="form-group">
             <label for="e">Commentaire</label>
             <textarea class="form-control" id="e" th:field="*{e}" rows="4" required></textarea>
