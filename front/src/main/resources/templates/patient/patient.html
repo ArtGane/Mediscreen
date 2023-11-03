@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Patient</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<style>
+    /* Style pour la section des notes */
+    .notes-section {
+        margin-top: 20px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f5f5f5;
+    }
+
+    /* Style pour la table des notes */
+    .notes-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid #ddd;
+        margin-top: 10px;
+    }
+
+    /* Style pour les en-têtes de colonnes */
+    .notes-table th {
+        background-color: #333;
+        color: #fff;
+        padding: 10px;
+        text-align: left;
+    }
+
+    /* Style pour les lignes impaires du tableau */
+    .notes-table tbody tr:nth-child(odd) {
+        background-color: #f2f2f2;
+    }
+
+    /* Style pour les cellules du tableau */
+    .notes-table td {
+        padding: 10px;
+        border: 1px solid #ddd;
+    }
+
+    /* Style pour les liens "Lire la suite" */
+    .read-more-link {
+        text-decoration: underline;
+        color: #007bff;
+        cursor: pointer;
+    }
+</style>
+<body>
+<div class="container mt-4">
+    <div class="row">
+        <!-- Informations du patient -->
+        <div class="col-md-8">
+            <h2>Informations du patient</h2>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Date de naissance</th>
+                    <th>Âge</th>
+                    <th>Genre</th>
+                    <th>Courriel</th>
+                    <th>Téléphone</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td th:text="${patient.family}"></td>
+                    <td th:text="${patient.given}"></td>
+                    <td th:text="${#temporals.format(patient.dob, 'yyyy-MM-dd')}"></td>
+                    <td th:text="${patient.age}"></td>
+                    <td th:text="${patient.sex}"></td>
+                    <td>
+                        <span th:if="${#strings.isEmpty(patient.address)}">Adresse inconnue</span>
+                        <span th:if="${!#strings.isEmpty(patient.address)}" th:text="${patient.address}"></span>
+                    </td>
+                    <td>
+                        <span th:if="${#strings.isEmpty(patient.phone)}">Téléphone inconnu</span>
+                        <span th:if="${!#strings.isEmpty(patient.phone)}" th:text="${patient.phone}"></span>
+                    </td>
+                    <td>
+                        <a th:href="@{'/patient/delete/' + ${patient.id}}">
+                    <span class="btn btn-danger btn-sm">
+                        <i class="fas fa-trash"></i>
+                    </span>
+                        </a>
+                        <a th:href="@{'/patient/edit/' + ${patient.id}}">
+                    <span class="btn btn-primary btn-sm">
+                        <i class="fas fa-edit"></i>
+                    </span>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!-- Lien pour ajouter une note -->
+            <a th:href="@{/patHistory/show(patId=${patient.id})}" class="btn btn-success">Ajouter une note</a>
+
+            <!-- Notes du patient -->
+            <div class="notes-section">
+                <h2>Notes du patient</h2>
+                <table class="table table-bordered notes-table">
+                    <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Contenu</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Utilisez une boucle Thymeleaf pour itérer à travers les notes -->
+                    <tr th:each="note : ${notes}">
+                        <td th:text="${#temporals.format(note.date, 'dd MMMM yyyy HH:mm')}"></td>
+                        <td>
+                            <span th:text="${#strings.abbreviate(note.e, 100)}"></span>
+                            <a th:href="@{/patHistory/note(id=${note.id})}" class="read-more-link">Lire la suite</a>
+                        </td>
+                    </tr>
+                    </tbody>                </table>
+
+                <div th:if="${errorMessage}" class="text-danger">
+                    <p th:text="${errorMessage}"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="assessment-section">
+                <h2>Évaluation du patient</h2>
+                <p>Contenu : <span th:text="${assessment.riskLevel}"></span></p>
+            </div>
+        </div>
+    </div>
+
+    <a class="btn btn-primary" th:href="@{/patient/all}">Retour à la liste</a>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
