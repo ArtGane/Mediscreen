@@ -65,7 +65,7 @@ class NoteServiceTest {
 
     @Test
     void testCreateOrUpdateNoteByPatId() {
-        Long patId = 1L;
+        String patId = "1L";
         note.setPatId(null);
 
         when(noteRepository.save(any(Note.class))).thenReturn(note);
