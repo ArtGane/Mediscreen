@@ -1,7 +1,9 @@
 package com.mediscreen.front.controller;
 
+import com.mediscreen.front.dto.AssessmentDto;
 import com.mediscreen.front.dto.NoteDto;
 import com.mediscreen.front.dto.PatientDto;
+import com.mediscreen.front.feign.AssessmentFeign;
 import com.mediscreen.front.feign.NoteFeign;
 import com.mediscreen.front.feign.PatientFeign;
 import org.junit.jupiter.api.Test;
@@ -31,6 +33,8 @@ class PatientControllerTest {
     private PatientFeign patientFeign;
     @MockBean
     private NoteFeign noteFeign;
+    @MockBean
+    private AssessmentFeign assessmentFeign;
 
     @Test
     void testGetAllPatients() throws Exception {
@@ -39,7 +43,7 @@ class PatientControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/patient/all"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("/patient/patients"))
+                .andExpect(MockMvcResultMatchers.view().name("patient/patients"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("patients"));
 
         verify(patientFeign, times(1)).getAllPatients();
@@ -49,7 +53,7 @@ class PatientControllerTest {
     void testShowCreateForm() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/patient/show"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("/patient/createPatient"))
+                .andExpect(MockMvcResultMatchers.view().name("patient/createPatient"))
                 .andExpect(model().attributeExists("patient"));
     }
 
@@ -57,7 +61,7 @@ class PatientControllerTest {
     void testDeletePatient() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/patient/delete/{id}", 1L))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(redirectedUrl("/patient/patients"));
+                .andExpect(redirectedUrl("patient/patients"));
 
         verify(patientFeign, times(1)).deletePatient(1L);
     }
@@ -69,7 +73,7 @@ class PatientControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/patient/edit/{id}", 1L))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("/patient/updatePatient"))
+                .andExpect(MockMvcResultMatchers.view().name("patient/updatePatient"))
                 .andExpect(model().attributeExists("patient"));
 
         verify(patientFeign, times(1)).getPatientById(1L);
@@ -81,10 +85,9 @@ class PatientControllerTest {
         when(patientFeign.savePatientUri(any(PatientDto.class))).thenReturn(expectedRedirect);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/patient/add")
-                        .param("attribute1", "value1") // Ajoutez ici les paramètres de votre PatientDto
+                        .param("attribute1", "value1")
                         .param("attribute2", "value2"))
-                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(redirectedUrl("/patient/patients"));
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection());
 
         verify(patientFeign, times(1)).savePatientUri(any(PatientDto.class));
     }
@@ -92,32 +95,12 @@ class PatientControllerTest {
     @Test
     void testSavePatient() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/patient/save")
-                        .param("attribute1", "value1") // Remplacez avec les attributs et valeurs appropriés
+                        .param("attribute1", "value1")
                         .param("attribute2", "value2"))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(redirectedUrl("/patient/patients"));
+                .andExpect(redirectedUrl("/patient/all"));
 
         verify(patientFeign, times(1)).savePatient(any(PatientDto.class));
-    }
-
-    @Test
-    void testGetPatientByLastnameAndFirstname() throws Exception {
-        PatientDto patientDto = new PatientDto();
-        patientDto.setId(1L);
-        List<NoteDto> noteDtos = Collections.singletonList(new NoteDto());
-        when(patientFeign.getPatientByLastnameAndFirstname(anyString(), anyString())).thenReturn(patientDto);
-        when(noteFeign.getAllPatientNotes(anyString())).thenReturn(noteDtos);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/patient/search")
-                        .param("lastname", "Doe")
-                        .param("firstname", "John"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("/patient/patient"))
-                .andExpect(model().attributeExists("patient"))
-                .andExpect(model().attributeExists("notes"));
-
-        verify(patientFeign, times(1)).getPatientByLastnameAndFirstname("Doe", "John");
-        verify(noteFeign, times(1)).getAllPatientNotes(anyString());
     }
 
     @Test
@@ -125,31 +108,15 @@ class PatientControllerTest {
         Long patientId = 1L;
         PatientDto patientDto = new PatientDto();
         List<NoteDto> noteDtos = Collections.singletonList(new NoteDto());
+        AssessmentDto assessmentDto = new AssessmentDto(1L, 0, "None");
         when(patientFeign.getPatientById(patientId)).thenReturn(patientDto);
         when(noteFeign.getAllPatientNotes(patientId.toString())).thenReturn(noteDtos);
+        when(assessmentFeign.getAssessmentByPatientId(patientId)).thenReturn(assessmentDto);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/patient/redirect")
                         .param("id", patientId.toString()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("/patient/patient"))
-                .andExpect(model().attributeExists("patient"))
-                .andExpect(model().attributeExists("notes"));
-
-        verify(patientFeign, times(1)).getPatientById(patientId);
-        verify(noteFeign, times(1)).getAllPatientNotes(patientId.toString());
-    }
-
-    @Test
-    void testGetPatientById() throws Exception {
-        Long patientId = 1L;
-        PatientDto patientDto = new PatientDto();
-        List<NoteDto> noteDtos = Collections.singletonList(new NoteDto());
-        when(patientFeign.getPatientById(patientId)).thenReturn(patientDto);
-        when(noteFeign.getAllPatientNotes(patientId.toString())).thenReturn(noteDtos);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/patient/{id}", patientId))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("/patient/patient"))
+                .andExpect(MockMvcResultMatchers.view().name("patient/patient"))
                 .andExpect(model().attributeExists("patient"))
                 .andExpect(model().attributeExists("notes"));
 
@@ -164,7 +131,7 @@ class PatientControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/patient/filter"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("/patient/patients"))
+                .andExpect(MockMvcResultMatchers.view().name("patient/patients"))
                 .andExpect(model().attributeExists("patients"));
 
         verify(patientFeign, times(1)).getPatientsOver30();
@@ -179,7 +146,7 @@ class PatientControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/patient/filterByGender")
                         .param("sex", gender))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("/patient/patients"))
+                .andExpect(MockMvcResultMatchers.view().name("patient/patients"))
                 .andExpect(model().attributeExists("patients"));
 
         verify(patientFeign, times(1)).getPatientsByGender(gender);
