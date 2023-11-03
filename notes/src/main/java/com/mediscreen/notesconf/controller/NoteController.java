@@ -21,9 +21,9 @@ public class NoteController {
         return noteService.createOrUpdateNote(note);
     }
 
-    @PostMapping("/save")
-    public Note createOrUpdateNoteByPatient(@ModelAttribute Note note, @RequestParam("patId") Long patId) {
-        return noteService.createOrUpdateNoteByPatId(note, patId);
+    @PostMapping(path = "/save")
+    public Note createOrUpdateNoteByPatient(@ModelAttribute Note note) {
+        return noteService.createOrUpdateNoteByPatId(note, note.getPatId());
     }
 
     @GetMapping("/note")
@@ -41,9 +41,8 @@ public class NoteController {
         noteService.deleteNote(id);
     }
 
-
     @GetMapping("/edit")
-    public Note showUpdateForm(@RequestParam String id) {
+    public Note showUpdateForm(@RequestParam("id") String id) {
         Note note = noteService.getNoteById(id);
         return noteService.createOrUpdateNote(note);
     }

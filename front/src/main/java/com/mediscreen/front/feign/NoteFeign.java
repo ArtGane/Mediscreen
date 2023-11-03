@@ -8,25 +8,21 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-@FeignClient(name = "notes", url = "localhost:8082")
+@FeignClient(name = "notes", url = "${url.note}")
 public interface NoteFeign {
+    @PostMapping(value = "/save")
+    void createNoteByPatId(@ModelAttribute NoteDto noteDto);
 
-    @PostMapping("/patHistory/add")
-    void createNote(@ModelAttribute NoteDto noteDto);
-
-    @PostMapping(value = "/patHistory/save", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    void createNoteByPatId(Map<String, ?> data);
-
-    @GetMapping("/patHistory/edit")
+    @GetMapping("/edit")
     NoteDto showUpdateForm(@RequestParam String id);
 
-    @GetMapping("/patHistory/note")
+    @GetMapping("/note")
     NoteDto getNoteById(@RequestParam("id") String id);
 
-    @GetMapping("/patHistory/patient/all")
+    @GetMapping("/patient/all")
     List<NoteDto> getAllPatientNotes(@RequestParam("patId") String patId);
 
-    @GetMapping("/patHistory/delete")
+    @GetMapping("/delete")
     void deleteNote(@RequestParam("id") String id);
 
 }

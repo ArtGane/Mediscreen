@@ -44,12 +44,12 @@ public class NoteService {
      * @return La note créée ou mise à jour.
      * @throws IllegalArgumentException Si la note est nulle.
      */
-    public Note createOrUpdateNoteByPatId(Note note, Long patId) {
+    public Note createOrUpdateNoteByPatId(Note note, String patId) {
         if (note == null) {
             logger.error("La note est null. Impossible de créer ou mettre à jour la note.");
             throw new IllegalArgumentException("La note ne peut pas être null.");
         }
-        note.setPatId(patId.toString());
+        note.setPatId(patId);
 
         if (note.getDate() == null) {
             note.setDate();
