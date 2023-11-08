@@ -28,7 +28,7 @@ public class NoteController {
     }
 
     @PostMapping("/save")
-    public String createOrUpdateNote(@ModelAttribute NoteDto noteDto, Model model) {
+    public String createOrUpdateNote(@ModelAttribute("note") NoteDto noteDto, Model model) {
         noteFeign.createNoteByPatId(noteDto);
         PatientDto patientDto = patientFeign.getPatientById(Long.parseLong(noteDto.getPatId()));
         AssessmentDto assessmentDto = assessmentFeign.getAssessmentByPatientId(Long.parseLong(noteDto.getPatId()));

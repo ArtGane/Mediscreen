@@ -17,12 +17,12 @@ public class NoteController {
     NoteService noteService;
 
     @PostMapping(path = "/add", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public Note createOrUpdateNote(@ModelAttribute Note note) {
+    public Note createOrUpdateNote(Note note) {
         return noteService.createOrUpdateNote(note);
     }
 
-    @PostMapping(path = "/save")
-    public Note createOrUpdateNoteByPatient(@ModelAttribute Note note) {
+    @PostMapping(path = "/save", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Note createOrUpdateNoteByPatient(@ModelAttribute("note") Note note) {
         return noteService.createOrUpdateNoteByPatId(note, note.getPatId());
     }
 

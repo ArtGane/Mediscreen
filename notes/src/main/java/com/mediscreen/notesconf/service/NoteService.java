@@ -27,10 +27,12 @@ public class NoteService {
      * @throws IllegalArgumentException Si la note est nulle.
      */
     public Note createOrUpdateNote(Note note) {
+
         if (note == null) {
             logger.error("La note est null. Impossible de créer ou mettre à jour la note.");
             throw new IllegalArgumentException("La note ne peut pas être null.");
         }
+        note.setDate();
         noteRepository.save(note);
         logger.info("La note du {} a été créée ou mise à jour", note.getDate());
         return note;
