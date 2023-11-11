@@ -47,7 +47,7 @@ services:
       - url.patient=patient:8081/patient
       - url.notes=notes:8082/patHistory
   front:
-    build: front-bad
+    build: ./front
     container_name: front
     ports:
       - "8083:8083"
