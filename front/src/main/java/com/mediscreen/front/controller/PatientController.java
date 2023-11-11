@@ -42,9 +42,9 @@ public class PatientController {
     }
 
     @GetMapping("/delete/{id}")
-    public RedirectView deletePatient(@PathVariable Long id) {
+    public String deletePatient(@PathVariable Long id) {
         patientFeign.deletePatient(id);
-        return new RedirectView("patient/patients");
+        return "redirect:/patient/all";
     }
 
     @GetMapping("/edit/{id}")
