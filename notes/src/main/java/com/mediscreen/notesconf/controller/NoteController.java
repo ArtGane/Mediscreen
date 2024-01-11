@@ -36,7 +36,7 @@ public class NoteController {
         return noteService.getAllNotes(patId);
     }
 
-    @GetMapping("/delete")
+    @DeleteMapping("/delete")
     public void deleteNote(@RequestParam String id) {
         noteService.deleteNote(id);
     }

@@ -60,7 +60,7 @@ public class NoteController {
         return "patient/patient";
     }
 
-    @GetMapping("/delete")
+    @DeleteMapping("/delete")
     public String deleteNote(@RequestParam("id") String id, @RequestParam("patId") String patId) {
         noteFeign.deleteNote(id);
         return "redirect:/patient/all";

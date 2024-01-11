@@ -41,7 +41,7 @@ public class PatientController {
         return "patient/createPatient";
     }
 
-    @GetMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public String deletePatient(@PathVariable Long id) {
         patientFeign.deletePatient(id);
         return "redirect:/patient/all";
