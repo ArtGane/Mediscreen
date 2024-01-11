@@ -8,8 +8,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +26,6 @@ class PatientServiceTest {
 
     @InjectMocks
     PatientService patientService;
-
     @Mock
     PatientRepository patientRepository;
 
@@ -114,6 +115,7 @@ class PatientServiceTest {
     @Test
     void TestGetPatientsByAgeOverAgeRequired() {
         int ageRequired = 30;
+        when(patientRepository.findAll()).thenReturn(patients);
         List<Patient> result = patientService.getPatientsByAgeOverAgeRequired(ageRequired);
         assertTrue(result.stream().allMatch(p -> p.getAge() > ageRequired));
     }
@@ -121,6 +123,7 @@ class PatientServiceTest {
     @Test
     void TestGetOneGenderOverAgeRequired() {
         String gender = "F";
+        when(patientRepository.findAll()).thenReturn(patients);
         List<Patient> result = patientService.getOneGenderListOfPatients(gender);
         assertTrue(result.stream().allMatch(p -> p.getSex().equalsIgnoreCase(gender)));
     }

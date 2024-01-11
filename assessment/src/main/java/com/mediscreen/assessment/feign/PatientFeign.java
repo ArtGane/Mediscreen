@@ -14,7 +14,7 @@ public interface PatientFeign {
     @GetMapping("/all")
     List<PatientDto> getAllPatients();
 
-    @GetMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     ResponseEntity<Void> deletePatient(@PathVariable Long id);
 
     @PostMapping("/add")

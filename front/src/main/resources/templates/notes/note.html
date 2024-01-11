@@ -7,7 +7,12 @@
 </head>
 <body>
 <a th:href="@{/patHistory/edit(id=${note.id})}">Modifier</a>
-<a th:href="@{/patHistory/delete(id=${note.id}, patId=${note.patId})}">Supprimer</a>
+<form th:action="@{/patHistory/delete(id=${note.id}, patId=${note.patId})}" method="post">
+    <input type="hidden" name="_method" value="delete"/>
+    <button type="submit" class="btn btn-danger btn-sm">
+        Supprimer
+    </button>
+</form>
 <div class="note-detail">
     <h1>Détail de la Note</h1>
     <div class="note-content">

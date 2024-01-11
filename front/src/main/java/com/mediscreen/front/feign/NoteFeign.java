@@ -23,7 +23,7 @@ public interface NoteFeign {
     @GetMapping("/patient/all")
     List<NoteDto> getAllPatientNotes(@RequestParam("patId") String patId);
 
-    @GetMapping("/delete")
+    @DeleteMapping("/delete")
     void deleteNote(@RequestParam("id") String id);
 
 }

@@ -15,13 +15,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.servlet.view.RedirectView;
-
 import java.util.Collections;
 import java.util.List;
-
 import static org.mockito.Mockito.*;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -44,7 +44,7 @@ class PatientControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/patient/all"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("patient/patients"))
-                .andExpect(MockMvcResultMatchers.model().attributeExists("patients"));
+                .andExpect(model().attributeExists("patients"));
 
         verify(patientFeign, times(1)).getAllPatients();
     }
@@ -59,25 +59,25 @@ class PatientControllerTest {
 
     @Test
     void testDeletePatient() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/patient/delete/{id}", 1L))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/patient/delete/{id}", 1L))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(model().attributeDoesNotExist("patient"));
 
         verify(patientFeign, times(1)).deletePatient(1L);
     }
 
-//    @Test
-//    void testShowUpdateForm() throws Exception {
-//        PatientDto patientDto = new PatientDto();
-//        when(patientFeign.getPatientById(1L)).thenReturn(patientDto);
-//
-//        mockMvc.perform(MockMvcRequestBuilders.get("/patient/edit/{id}", 1L))
-//                .andExpect(MockMvcResultMatchers.status().isOk())
-//                .andExpect(MockMvcResultMatchers.view().name("patient/updatePatient"))
-//                .andExpect(model().attributeExists("patient"));
-//
-//        verify(patientFeign, times(1)).getPatientById(1L);
-//    }
+    @Test
+    void testShowUpdateForm() throws Exception {
+        PatientDto patientDto = new PatientDto();
+        when(patientFeign.getPatientById(1L)).thenReturn(patientDto);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/patient/edit/{id}", 1L))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("patient/updatePatient"))
+                .andExpect(model().attributeExists("patient"));
+
+        verify(patientFeign, times(1)).getPatientById(1L);
+    }
 
     @Test
     void testSavePatientUri() throws Exception {

@@ -42,7 +42,7 @@ public class NoteController {
     }
 
     @GetMapping("/edit")
-    public Note showUpdateForm(@RequestParam("id") String id) {
+    public Note createOrUpdateNote(@RequestParam("id") String id) {
         Note note = noteService.getNoteById(id);
         return noteService.createOrUpdateNote(note);
     }

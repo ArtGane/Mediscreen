@@ -2,10 +2,10 @@ package com.mediscreen.front.feign;
 
 import com.mediscreen.front.dto.PatientDto;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
+
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public interface PatientFeign {
     @GetMapping("/all")
     List<PatientDto> getAllPatients();
 
-    @GetMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     ResponseEntity<Void> deletePatient(@PathVariable Long id);
 
     @PostMapping("/add")

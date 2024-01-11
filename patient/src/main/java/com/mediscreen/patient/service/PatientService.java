@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -24,30 +25,34 @@ public class PatientService {
      * Méthode permettant de créer un nouveau patient ou de le mettre à jour en le sauvegardant dans le référentiel (repository) des patients.
      *
      * @param patient Objet de type Patient représentant les informations du patient à créer.
+     * @return Le patient créé ou mis à jour.
+     * @throws IllegalArgumentException si le patient est null.
      */
     public Patient createOrUpdatePatient(Patient patient) {
         if (patient != null) {
             patientRepository.save(patient);
-            logger.info("Patient enregistré en base de données");
+            return patient;
         } else {
-            logger.error("Le patient n'a pas pu être enregistré en bdd parce qu'il est null");
+            throw new IllegalArgumentException("Le patient ne peut pas être enregistré en base de données car il est null");
         }
-
-        return patient;
     }
 
     /**
      * Méthode permettant de supprimer un patient existant du référentiel des patients en utilisant son identifiant unique.
      *
      * @param id Identifiant unique (Long) du patient à supprimer.
+     * @throws IllegalArgumentException si l'ID du patient est null.
      */
     public void deletePatient(Long id) {
         if (id != null) {
             Patient patient = patientRepository.getReferenceById(id);
-            patientRepository.delete(patient);
-            logger.info("Patient supprimé");
+            if (patient != null) {
+                patientRepository.delete(patient);
+            } else {
+                throw new IllegalArgumentException("Le patient avec l'ID " + id + " n'existe pas en base de données");
+            }
         } else {
-            logger.error("ID du patient null");
+            throw new IllegalArgumentException("L'ID du patient ne peut pas être null");
         }
     }
 
@@ -56,12 +61,13 @@ public class PatientService {
      * Méthode permettant d'obtenir la liste de tous les patients enregistrés dans le référentiel.
      *
      * @return Une liste (List) d'objets Patient contenant tous les patients enregistrés.
+     * @throws IllegalStateException si la liste des patients est vide.
      */
     public List<Patient> getAllPatients() {
         List<Patient> patients = patientRepository.findAll();
 
         if (patients.isEmpty()) {
-            logger.error("Il n'y a aucun patient en base de données");
+            throw new IllegalStateException("Il n'y a aucun patient en base de données");
         }
 
         return patients;
@@ -72,14 +78,12 @@ public class PatientService {
      *
      * @param id Identifiant unique (Long) du patient recherché.
      * @return Un objet Patient représentant les informations du patient correspondant à l'identifiant unique donné.
+     * @throws NoSuchElementException si le patient n'est pas présent en base de données.
      */
     public Patient getPatientById(Long id) {
         Optional<Patient> patient = patientRepository.findById(id);
 
-        if (!patient.isPresent()) {
-            logger.error("Ce patient ou son ID n'existe pas en base de données");
-        }
-        return patient.get();
+        return patient.orElseThrow(() -> new NoSuchElementException("Le patient avec l'ID " + id + " n'existe pas en base de données"));
     }
 
     /**

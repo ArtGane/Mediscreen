@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.mediscreen.front.controller.NoteControllerTest
+-------------------------------------------------------------------------------
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.276 s - in com.mediscreen.front.controller.NoteControllerTest

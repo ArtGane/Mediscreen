@@ -14,9 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
 
 import static org.mockito.Mockito.*;
 
@@ -39,6 +37,9 @@ class NoteControllerTest {
         String patId = "1";
         NoteDto noteDto = new NoteDto();
         noteDto.setE("Some note content");
+        noteDto.setId("12");
+        noteDto.setPatId(patId);
+        noteDto.setDate(LocalDateTime.now());
 
         when(patientFeign.getPatientById(Long.parseLong(patId))).thenReturn(new PatientDto());
         mockMvc.perform(MockMvcRequestBuilders.post("/patHistory/save")
@@ -48,8 +49,8 @@ class NoteControllerTest {
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/patient/all"));
 
         verify(patientFeign, times(1)).getPatientById(Long.parseLong(patId));
-//        verify(noteFeign, times(1)).createNoteByPatId(noteDto);
     }
+
 
     @Test
     void testShowCreateNoteForm() throws Exception {
@@ -87,7 +88,7 @@ class NoteControllerTest {
     void testDeleteNote() throws Exception {
         String noteId = "1";
         String patId = "2";
-        mockMvc.perform(MockMvcRequestBuilders.get("/patHistory/delete")
+        mockMvc.perform(MockMvcRequestBuilders.delete("/patHistory/delete")
                         .param("id", noteId)
                         .param("patId", patId))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())

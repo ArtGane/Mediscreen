@@ -3,10 +3,7 @@ package com.mediscreen.assessment.feign;
 import com.mediscreen.assessment.dto.NoteDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -29,7 +26,7 @@ public interface NoteFeign {
     @GetMapping("/patient/all")
     List<NoteDto> getAllPatientNotes(@RequestParam("patId") String patId);
 
-    @GetMapping("/delete")
+    @DeleteMapping("/delete")
     void deleteNote(@RequestParam("id") String id);
 
 }

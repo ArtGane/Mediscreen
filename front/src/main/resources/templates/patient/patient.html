@@ -84,11 +84,12 @@
                         <span th:if="${!#strings.isEmpty(patient.phone)}" th:text="${patient.phone}"></span>
                     </td>
                     <td>
-                        <a th:href="@{'/patient/delete/' + ${patient.id}}">
-                    <span class="btn btn-danger btn-sm">
-                        <i class="fas fa-trash"></i>
-                    </span>
-                        </a>
+                        <form th:action="@{'/patient/delete/' + ${patient.id}}" method="post">
+                            <input type="hidden" name="_method" value="delete" />
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
                         <a th:href="@{'/patient/edit/' + ${patient.id}}">
                     <span class="btn btn-primary btn-sm">
                         <i class="fas fa-edit"></i>
@@ -99,41 +100,10 @@
                 </tbody>
             </table>
 
-            <!-- Lien pour ajouter une note -->
-            <a th:href="@{/patHistory/show(patId=${patient.id})}" class="btn btn-success">Ajouter une note</a>
+            <div th:replace="~{fragments/notes-frag :: notesSection}"></div>
 
-            <!-- Notes du patient -->
-            <div class="notes-section">
-                <h2>Notes du patient</h2>
-                <table class="table table-bordered notes-table">
-                    <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Contenu</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <!-- Utilisez une boucle Thymeleaf pour itérer à travers les notes -->
-                    <tr th:each="note : ${notes}">
-                        <td th:text="${#temporals.format(note.date, 'dd MMMM yyyy HH:mm')}"></td>
-                        <td>
-                            <span th:text="${#strings.abbreviate(note.e, 100)}"></span>
-                            <a th:href="@{/patHistory/note(id=${note.id})}" class="read-more-link">Lire la suite</a>
-                        </td>
-                    </tr>
-                    </tbody>                </table>
+            <div th:replace="~{fragments/asses-frag :: assesSection}"></div>
 
-                <div th:if="${errorMessage}" class="text-danger">
-                    <p th:text="${errorMessage}"></p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="assessment-section">
-                <h2>Évaluation du patient</h2>
-                <p>Contenu : <span th:text="${assessment.riskLevel}"></span></p>
-            </div>
         </div>
     </div>
 
